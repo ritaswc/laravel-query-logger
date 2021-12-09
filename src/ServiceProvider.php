@@ -73,7 +73,7 @@ class ServiceProvider extends LaravelServiceProvider
         if (count($prefixArr)) {
             $record = false;
             foreach ($prefixArr as $pr) {
-                if (Str::startsWith($pr, $sql)) {
+                if (Str::startsWith($sql, $pr)) {
                     $record = true;
                 }
             }
