@@ -9,12 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Overtrue\LaravelQueryLogger;
+namespace Ritaswc\LaravelQueryLogger;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use Illuminate\Support\Str;
 
 class ServiceProvider extends LaravelServiceProvider
 {
@@ -38,6 +39,10 @@ class ServiceProvider extends LaravelServiceProvider
                 return;
             }
 
+            if (!$this->needRecord($query->sql)) {
+                return;
+            }
+
             $sqlWithPlaceholders = str_replace(['%', '?', '%s%s'], ['%%', '%s', '?'], $query->sql);
 
             $bindings = $query->connection->prepareBindings($query->bindings);
@@ -52,6 +57,28 @@ class ServiceProvider extends LaravelServiceProvider
                 ->debug(sprintf('[%s] [%s] %s | %s: %s', $query->connection->getDatabaseName(), $duration, $realSql,
                 request()->method(), request()->getRequestUri()));
         });
+    }
+
+    /**
+     * 是否写入日志
+     * @param $sql
+     * @return bool
+     */
+    protected function needRecord($sql)
+    {
+        $sql = strtolower(trim($sql));
+        $record = true;// 是否写入日志
+        $prefix = strtolower($this->app['config']->get('logging.query.only_prefix', ''));
+        $prefixArr = strlen($prefix) ? explode(',', $prefix) : [];
+        if (count($prefixArr)) {
+            $record = false;
+            foreach ($prefixArr as $pr) {
+                if (Str::startsWith($pr, $sql)) {
+                    $record = true;
+                }
+            }
+        }
+        return $record;
     }
 
     /**

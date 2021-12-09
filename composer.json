@@ -1,5 +1,5 @@
 {
-    "name": "overtrue/laravel-query-logger",
+    "name": "ritaswc/laravel-query-logger",
     "description": "A dev tool to log all queries for laravel application.",
     "type": "library",
     "require": {
@@ -7,19 +7,19 @@
     },
     "autoload": {
         "psr-4": {
-            "Overtrue\\LaravelQueryLogger\\": "src"
+            "Ritaswc\\LaravelQueryLogger\\": "src"
         }
     },
     "license": "MIT",
     "authors": [
         {
-            "name": "overtrue",
-            "email": "anzhengchao@gmail.com"
+            "name": "charles zhu",
+            "email": "ritaswc@163.com"
         }
     ],
     "extra": {
         "laravel": {
-            "providers": ["Overtrue\\LaravelQueryLogger\\ServiceProvider"]
+            "providers": ["Ritaswc\\LaravelQueryLogger\\ServiceProvider"]
         },
         "hooks": {
             "pre-commit": [
